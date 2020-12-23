@@ -21,4 +21,9 @@ public class CategoriaService {
 	public Categoria save( Categoria cat ) {
 		return repo.save( cat );
 	}
+	
+	public Categoria update( Categoria cat ) {
+		find( cat.getId() );
+		return repo.save( cat );
+	}
 }
