@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +57,8 @@ public class CategoriaResource {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Void> save( @RequestBody Categoria cat ) {
+	public ResponseEntity<Void> insert( @Valid @RequestBody CategoriaDTO dto ) {
+		Categoria cat = categoriaService.fromDTO( dto );
 		cat = categoriaService.save( cat );
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand( cat.getId() ).toUri();
@@ -64,7 +67,8 @@ public class CategoriaResource {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Categoria> update( @PathVariable Integer id, @RequestBody Categoria cat ) {
+	public ResponseEntity<Categoria> update( @PathVariable Integer id, @Valid @RequestBody CategoriaDTO dto ) {
+		Categoria cat = categoriaService.fromDTO( dto );
 		cat.setId( id );
 		cat = categoriaService.update( cat );
 		
