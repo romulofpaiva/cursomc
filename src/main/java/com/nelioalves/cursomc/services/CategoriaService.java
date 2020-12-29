@@ -19,34 +19,34 @@ import com.nelioalves.cursomc.services.exceptions.ObjectNotFoundException;
 public class CategoriaService {
 
 	@Autowired
-	private CategoriaRepository repo;
+	private CategoriaRepository repository;
 
 	public Categoria find(Integer id) {
-		return repo.findById(id).orElseThrow(() -> new ObjectNotFoundException( 
+		return repository.findById(id).orElseThrow(() -> new ObjectNotFoundException( 
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Categoria.class.getName() ));
 	}
 	
 	public List<Categoria> findAll() {
-		return repo.findAll();
+		return repository.findAll();
 	}
 	
 	public Page<Categoria> findPage( Integer page, Integer linesPerPage, String orderBy, String direction ) {
-		return repo.findAll( PageRequest.of( page, linesPerPage, Direction.valueOf( direction ), orderBy ) );
+		return repository.findAll( PageRequest.of( page, linesPerPage, Direction.valueOf( direction ), orderBy ) );
 	}
 	
 	public Categoria save( Categoria cat ) {
-		return repo.save( cat );
+		return repository.save( cat );
 	}
 	
 	public Categoria update( Categoria cat ) {
 		find( cat.getId() );
-		return repo.save( cat );
+		return repository.save( cat );
 	}
 	
 	public void delete( Integer id ) {
 		find( id );
 		try {
-			repo.deleteById(id);
+			repository.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException( "Não é possível excluir uma categoria que possui produtos." );
 		}

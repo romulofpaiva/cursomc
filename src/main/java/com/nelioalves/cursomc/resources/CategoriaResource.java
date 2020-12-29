@@ -29,18 +29,18 @@ import com.nelioalves.cursomc.services.CategoriaService;
 public class CategoriaResource {
 
 	@Autowired
-	private CategoriaService categoriaService;
+	private CategoriaService service;
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Categoria> find(@PathVariable Integer id) {
-		Categoria cat = categoriaService.find(id);
+		Categoria cat = service.find(id);
 
 		return ResponseEntity.ok(cat);
 	}
 	
 	@GetMapping
 	public ResponseEntity<List<CategoriaDTO>> findAll( ) {
-		List<CategoriaDTO> list = categoriaService.findAll( ).stream().map( cat -> new CategoriaDTO( cat ) ).collect(Collectors.toList());
+		List<CategoriaDTO> list = service.findAll( ).stream().map( cat -> new CategoriaDTO( cat ) ).collect(Collectors.toList());
 		
 		return ResponseEntity.ok( list );
 	}
@@ -51,15 +51,15 @@ public class CategoriaResource {
 			@RequestParam(value="linesPerPage", defaultValue="24") Integer linesPerPage,
 			@RequestParam(value="orderBy", defaultValue="nome") String orderBy,
 			@RequestParam(value="direction", defaultValue="ASC") String direction ) {
-		Page<CategoriaDTO> list = categoriaService.findPage(page, linesPerPage, orderBy, direction).map( cat -> new CategoriaDTO( cat ));
+		Page<CategoriaDTO> list = service.findPage(page, linesPerPage, orderBy, direction).map( cat -> new CategoriaDTO( cat ));
 		
 		return ResponseEntity.ok( list );
 	}
 	
 	@PostMapping
 	public ResponseEntity<Void> insert( @Valid @RequestBody CategoriaDTO dto ) {
-		Categoria cat = categoriaService.fromDTO( dto );
-		cat = categoriaService.save( cat );
+		Categoria cat = service.fromDTO( dto );
+		cat = service.save( cat );
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand( cat.getId() ).toUri();
 		
@@ -68,16 +68,16 @@ public class CategoriaResource {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Categoria> update( @PathVariable Integer id, @Valid @RequestBody CategoriaDTO dto ) {
-		Categoria cat = categoriaService.fromDTO( dto );
+		Categoria cat = service.fromDTO( dto );
 		cat.setId( id );
-		cat = categoriaService.update( cat );
+		cat = service.update( cat );
 		
 		return ResponseEntity.ok( cat );
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete( @PathVariable Integer id ) {
-		categoriaService.delete( id );
+		service.delete( id );
 		return ResponseEntity.ok( ).build();
 	}
 }
