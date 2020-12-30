@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.nelioalves.cursomc.domains.Cliente;
 import com.nelioalves.cursomc.repositories.ClienteRepository;
+import com.nelioalves.cursomc.repositories.EnderecoRepository;
 import com.nelioalves.cursomc.services.exceptions.DataIntegrityException;
 import com.nelioalves.cursomc.services.exceptions.ObjectNotFoundException;
 
@@ -19,6 +20,9 @@ public class ClienteService {
 
 	@Autowired
 	private ClienteRepository repository;
+	
+	@Autowired
+	private EnderecoRepository enderecoRepository;
 	
 	public Cliente find(Integer id)	{
 		return repository.findById(id).orElseThrow( () -> new ObjectNotFoundException(
@@ -31,6 +35,12 @@ public class ClienteService {
 	
 	public Page<Cliente> findPage( Integer page, Integer linesPerPage, String orderBy, String direction ) {
 		return repository.findAll( PageRequest.of(page, linesPerPage, Direction.valueOf( direction ), orderBy ) );
+	}
+	
+	public Cliente insert( Cliente cli ) {
+		cli = repository.save( cli );
+		enderecoRepository.saveAll( cli.getEnderecos() );
+		return cli;
 	}
 	
 	public Cliente update( Cliente obj ) {

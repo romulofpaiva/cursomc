@@ -34,7 +34,7 @@ public class CategoriaService {
 		return repository.findAll( PageRequest.of( page, linesPerPage, Direction.valueOf( direction ), orderBy ) );
 	}
 	
-	public Categoria save( Categoria cat ) {
+	public Categoria insert( Categoria cat ) {
 		return repository.save( cat );
 	}
 	
