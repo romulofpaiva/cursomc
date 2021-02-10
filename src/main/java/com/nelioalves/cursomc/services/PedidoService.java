@@ -13,6 +13,7 @@ import com.nelioalves.cursomc.domains.enums.EstadoPagamento;
 import com.nelioalves.cursomc.repositories.ItemPedidoRepository;
 import com.nelioalves.cursomc.repositories.PagamentoRepository;
 import com.nelioalves.cursomc.repositories.PedidoRepository;
+import com.nelioalves.cursomc.services.email.EmailService;
 import com.nelioalves.cursomc.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -23,6 +24,9 @@ public class PedidoService {
 	
 	@Autowired
 	private ClienteService clienteService;
+	
+	@Autowired
+	private EmailService emailService;
 	
 	@Autowired
 	private ProdutoService produtoService;
@@ -65,7 +69,7 @@ public class PedidoService {
 		
 		itemPedidoRepository.saveAll( pedido.getItens() );
 		
-		System.out.print(pedido);
+		emailService.sendOrderConfirmationEmail(pedido);
 		
 		return pedido;
 	}
