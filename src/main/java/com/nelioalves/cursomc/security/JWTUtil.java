@@ -1,6 +1,7 @@
 package com.nelioalves.cursomc.security;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
 
 @Component
 public class JWTUtil {
@@ -38,11 +40,29 @@ public class JWTUtil {
 	}
 
 	private Map<String, Claim> getClaims(String token) {
-		return JWT.require(Algorithm.HMAC512(secret)).build().verify(token).getClaims();
+		try {
+			return verifyToken(token).getClaims();
+		}
+		catch( Exception e ) {
+			return new HashMap<String, Claim>();
+		}
 	}
-	
+
+	private DecodedJWT verifyToken(String token) {
+		try {
+			return JWT.require(Algorithm.HMAC512(secret)).build().verify(token);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
 	private String getClaim(String token, String claim) {
-		return JWT.require(Algorithm.HMAC512(secret)).build().verify(token).getClaim(claim).asString();
+		try {
+			return verifyToken(token).getClaim(claim).asString();
+		}
+		catch( Exception e ) {
+			return "";
+		}
 	}
 
 	public String getUserName(String token) {
